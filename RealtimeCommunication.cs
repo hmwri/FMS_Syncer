@@ -31,6 +31,8 @@ public class CommunicationData
 {
     public Vector3 headPosition;
     public Quaternion headRotation;
+    public Vector3 parentPosition;
+    public Quaternion parentRotation;
     public Vector3 pelvisPosition;
     public Vector3 leftHandPosition;
 
@@ -45,7 +47,8 @@ public class CommunicationData
         [SerializeField] private int timeOut =10;
         [SerializeField] private Player playerName = Player.Player1;
         [SerializeField] private int interval = 30;
-        
+
+        [SerializeField] private Transform parent;
         [SerializeField] private Transform head;
         [SerializeField] private Transform pelvis;
         [SerializeField] private Transform rightHand;
@@ -98,6 +101,8 @@ public class CommunicationData
                 {
                     headPosition = head.position,
                     headRotation = head.rotation,
+                    parentPosition = parent.position,
+                    parentRotation = parent.rotation,
                     pelvisPosition = pelvis.position,
                     leftHandPosition = leftHand.position,
                     rightHandPosition = rightHand.position
