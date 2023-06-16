@@ -29,16 +29,29 @@ public class ResponseForm
 [Serializable]
 public class CommunicationData
 {
-    public Vector3 position;
+    public Vector3 headPosition;
+    public Quaternion headRotation;
+    public Vector3 pelvisPosition;
+    public Vector3 leftHandPosition;
+
+    public Vector3 rightHandPosition;
+    
 }
 
     public class RealtimeCommunication : MonoBehaviour
     {
-        [SerializeField] private string hostIPAddress = "127.0.0.1";
-        [SerializeField] private int hostPort = 50007;
-        [SerializeField] private int timeOut = 300;
+        [SerializeField] private string hostIPAddress = "118.27.8.251";
+        [SerializeField] private int hostPort = 50000;
+        [SerializeField] private int timeOut =10;
         [SerializeField] private Player playerName = Player.Player1;
-        [SerializeField] private int interval = 100;
+        [SerializeField] private int interval = 30;
+        
+        [SerializeField] private Transform head;
+        [SerializeField] private Transform pelvis;
+        [SerializeField] private Transform rightHand;
+        [SerializeField] private Transform leftHand;
+        
+        
         IPEndPoint _remoteIpEndPoint;
         private UdpClient _udpClient;
         private int _frameCount = 0;
@@ -83,7 +96,12 @@ public class CommunicationData
                 opponent = playerName == Player.Player1 ? "player2" : "player1",
                 data = new CommunicationData()
                 {
-                    position = gameObject.transform.position
+                    headPosition = head.position,
+                    headRotation = head.rotation,
+                    pelvisPosition = pelvis.position,
+                    leftHandPosition = leftHand.position,
+                    rightHandPosition = rightHand.position
+
                 }
             };
             Byte[] sendBytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(requestForm));
