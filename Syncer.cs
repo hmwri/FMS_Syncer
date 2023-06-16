@@ -9,6 +9,8 @@ public class Syncer : MonoBehaviour
     [SerializeField] private Transform pelvis;
     [SerializeField] private Transform rightHand;
     [SerializeField] private Transform leftHand;
+
+    [SerializeField] private Transform parent;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +23,8 @@ public class Syncer : MonoBehaviour
         
         if (realtimeCommunication != null && realtimeCommunication.OpponentData != null)
         {
+            parent.position = realtimeCommunication.OpponentData.parentPosition;
+            parent.rotation = realtimeCommunication.OpponentData.parentRotation;
             //Debug.Log(realtimeCommunication.OpponentData.position);
             head.position = realtimeCommunication.OpponentData.headPosition;
             head.rotation = realtimeCommunication.OpponentData.headRotation;
