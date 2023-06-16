@@ -64,9 +64,7 @@ public class CommunicationData
             
             _udpClient = new UdpClient();
             try{
-                _remoteIpEndPoint = new IPEndPoint(IPAddress.Parse(hostIPAddress), hostPort);
-                _udpClient.Connect(_remoteIpEndPoint);
-                _udpClient.Client.ReceiveTimeout = timeOut;
+
                
             }
             catch (Exception e ) {
@@ -75,12 +73,30 @@ public class CommunicationData
 
         }
 
+        void Connect()
+        {
+            _remoteIpEndPoint = new IPEndPoint(IPAddress.Parse(hostIPAddress), hostPort);
+            _udpClient.Connect(_remoteIpEndPoint);
+            _udpClient.Client.ReceiveTimeout = timeOut;
+        }
+
         void Update()
         {
             _frameCount++;
             if (_frameCount % interval == 0)
             {
-                Sync();
+                try
+                {
+                    Sync();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                    if (e is SocketException && _udpClient.Client.RemoteEndPoint == null)
+                    {
+                        Connect();
+                    }
+                }
             }
             
         }
@@ -110,7 +126,6 @@ public class CommunicationData
                 }
             };
             Byte[] sendBytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(requestForm));
-
             _udpClient.SendAsync(sendBytes, sendBytes.Length);
                 
 
