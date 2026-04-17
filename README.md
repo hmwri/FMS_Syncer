@@ -24,6 +24,24 @@ VR協力綱渡りは、2 人協力プレイの VR 綱渡りゲームです。プ
 - `RealtimeCommunication.cs`: UDP 通信、送受信データ構造、同期処理
 - `Syncer.cs`: 受信した相手のデータを Transform に反映
 
+### 同期の流れ
+
+```mermaid
+sequenceDiagram
+    participant P1 as Player 1 Unity
+    participant S as UDP Host
+    participant P2 as Player 2 Unity
+
+    P1->>S: head / pelvis / hands / parent transforms
+    P2->>S: head / pelvis / hands / parent transforms
+    S-->>P1: Player 2 transform data
+    S-->>P2: Player 1 transform data
+    P1->>P1: Syncer applies opponent avatar transforms
+    P2->>P2: Syncer applies opponent avatar transforms
+```
+
+`RealtimeCommunication` が自分の Transform を送信し、相手の Transform を受信します。`Syncer` は受信済みの `OpponentData` を scene 上の相手アバターに反映します。
+
 ### 同期するデータ
 
 - head position / rotation
@@ -67,6 +85,24 @@ This repository contains the synchronization component rather than the full game
 
 - `RealtimeCommunication.cs`: UDP communication, request/response data, and periodic sync
 - `Syncer.cs`: applies received opponent data to scene transforms
+
+### Sync Flow
+
+```mermaid
+sequenceDiagram
+    participant P1 as Player 1 Unity
+    participant S as UDP Host
+    participant P2 as Player 2 Unity
+
+    P1->>S: head / pelvis / hands / parent transforms
+    P2->>S: head / pelvis / hands / parent transforms
+    S-->>P1: Player 2 transform data
+    S-->>P2: Player 1 transform data
+    P1->>P1: Syncer applies opponent avatar transforms
+    P2->>P2: Syncer applies opponent avatar transforms
+```
+
+`RealtimeCommunication` sends the local transforms and receives the opponent transforms. `Syncer` applies the received `OpponentData` to the opponent avatar in the Unity scene.
 
 ### Data
 
